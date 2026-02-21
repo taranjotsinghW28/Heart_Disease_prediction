@@ -1,5 +1,4 @@
 streamlit
 numpy
 scikit-learn
-pickle
-pandasgit add .
+pandas
