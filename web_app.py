@@ -5,9 +5,8 @@ import pickle
 st.set_page_config(page_title="Heart_Disease_prediction", page_icon=":shark:", layout="wide")
 st.title("Heart Disease Prediction")
 
-# Load model and scaler
-model = pickle.load(open("heart_model.pkl", "rb"))
-scaler = pickle.load(open("scaler.pkl", "rb"))
+
+model = pickle.load(open("rf_model1.pkl", "rb"))
 
 value1 = st.number_input("Age", min_value=1, max_value=120, value=30)
 value2 = st.selectbox("Sex (0 = Female, 1 = Male)", [0, 1])
@@ -27,11 +26,7 @@ features = np.array([[value1, value2, value3, value4, value5, value6, value7,
                       value8, value9, value10, value11, value12, value13]])
 
 if st.button("Predict"):
-
-    # 🔥 SCALE INPUT FIRST
-    features_scaled = scaler.transform(features)
-
-    prediction = model.predict(features_scaled)
+    prediction = model.predict(features)
 
     if prediction[0] == 1:
         st.error("⚠️ Heart Disease Detected")
