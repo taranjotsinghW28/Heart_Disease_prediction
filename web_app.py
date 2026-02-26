@@ -21,16 +21,15 @@ value12 = st.selectbox("Number of Major Vessels (ca)", [0, 1, 2, 3, 4])
 value13 = st.selectbox("Thalassemia (thal)", [3, 6, 7])
 
 
-if st.button("Predict"):
-    features = np.array([[value1, value2, value3, value4, value7,
-                          value8, value9, value10, value11, value12, value13]])
-    prediction = model.predict(features)
 
-    # Display result
-    if prediction[0] == 1:
-        st.error("⚠️ The model predicts **Heart Disease**.")
-    else:
-        st.success("✅ The model predicts **No Heart Disease**.")
+
+if st.button("Predict"):
+    features = np.array([[value1, value2, value3, value4,
+                          value7, value8, value9, value10,
+                          value11, value12, value13]])
+    prediction = model.predict(features)
+    st.write("Prediction:", prediction[0])
+
 
 
     
