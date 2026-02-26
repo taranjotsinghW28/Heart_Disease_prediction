@@ -6,7 +6,7 @@ st.set_page_config(page_title="Heart_Disease_prediction", page_icon=":shark:", l
 st.title("Heart Disease Prediction")
 
 
-model = pickle.load(open("rf_model1.pkl", "rb"))
+model = pickle.load(open("rf_model2.pkl", "rb"))
 
 value1 = st.number_input("Age", min_value=1, max_value=120, value=30)
 value2 = st.selectbox("Sex (0 = Female, 1 = Male)", [0, 1])
