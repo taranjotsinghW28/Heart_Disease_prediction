@@ -1,35 +1,61 @@
-import numpy as np
 import streamlit as st
 import pickle
+import pandas as pd
 
-st.set_page_config(page_title="Heart_Disease_prediction", page_icon=":shark:", layout="wide")
-st.title("Heart Disease Prediction")
+# Load model + threshold
+with open("heart_disease_pipeline.pkl", "rb") as f:
+    saved = pickle.load(f)
 
+model = saved["model"]
+threshold = saved["threshold"]
 
-model = pickle.load(open("rf_model2.pkl", "rb"))
+st.title("❤️ 10-Year Heart Disease Prediction")
+st.write("Enter patient details:")
 
-value1 = st.number_input("Age", min_value=1, max_value=120, value=30)
-value2 = st.selectbox("Sex (0 = Female, 1 = Male)", [0, 1])
-value3 = st.selectbox("Chest Pain Type (cp)", [0, 1, 2, 3])
-value4 = st.number_input("Resting Blood Pressure (trestbps)", min_value=80, max_value=200, value=120)
-value7 = st.selectbox("Resting ECG Results (restecg)", [0, 1, 2])
-value8 = st.number_input("Maximum Heart Rate Achieved (thalach)", min_value=60, max_value=250, value=150)
-value9 = st.selectbox("Exercise Induced Angina (exang)", [0, 1])
-value10 = st.number_input("ST Depression (oldpeak)", min_value=0.0, max_value=10.0, value=1.0, step=0.1)
-value11 = st.selectbox("Slope of Peak Exercise ST Segment (slope)", [0, 1, 2])
-value12 = st.selectbox("Number of Major Vessels (ca)", [0, 1, 2, 3, 4])
-value13 = st.selectbox("Thalassemia (thal)", [3, 6, 7])
-
-
-
+male = st.selectbox("Male (0 = Female, 1 = Male)", [0, 1])
+age = st.number_input("Age", 20, 100)
+education = st.selectbox("Education (1-4)", [1, 2, 3, 4])
+currentSmoker = st.selectbox("Current Smoker (0/1)", [0, 1])
+cigsPerDay = st.number_input("Cigarettes Per Day", 0, 70)
+BPMeds = st.selectbox("On BP Medication (0/1)", [0, 1])
+prevalentStroke = st.selectbox("Prevalent Stroke (0/1)", [0, 1])
+prevalentHyp = st.selectbox("Hypertension (0/1)", [0, 1])
+diabetes = st.selectbox("Diabetes (0/1)", [0, 1])
+totChol = st.number_input("Total Cholesterol", 100, 600)
+sysBP = st.number_input("Systolic BP", 80, 250)
+diaBP = st.number_input("Diastolic BP", 40, 150)
+BMI = st.number_input("BMI", 10.0, 60.0)
+heartRate = st.number_input("Heart Rate", 40, 200)
+glucose = st.number_input("Glucose", 40, 400)
 
 if st.button("Predict"):
-    features = np.array([[value1, value2, value3, value4,
-                          value7, value8, value9, value10,
-                          value11, value12, value13]])
-    prediction = model.predict(features)
-    st.write("Prediction:", prediction[0])
 
+    input_data = pd.DataFrame([{
+        'male': male,
+        'age': age,
+        'education': education,
+        'currentSmoker': currentSmoker,
+        'cigsPerDay': cigsPerDay,
+        'BPMeds': BPMeds,
+        'prevalentStroke': prevalentStroke,
+        'prevalentHyp': prevalentHyp,
+        'diabetes': diabetes,
+        'totChol': totChol,
+        'sysBP': sysBP,
+        'diaBP': diaBP,
+        'BMI': BMI,
+        'heartRate': heartRate,
+        'glucose': glucose
+    }])
 
+    # Ensure correct column order
+    input_data = input_data[model.feature_names_in_]
 
-    
+    proba = model.predict_proba(input_data)[0][1]
+
+    st.write(f"Risk Probability: {proba:.2%}")
+
+    if proba > threshold:
+        st.error("⚠️ High Risk of Heart Disease (10 Year)")
+    else:
+        st.success("✅ Low Risk")
