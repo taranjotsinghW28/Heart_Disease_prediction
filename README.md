@@ -143,7 +143,7 @@ This project predicts a patient's **10-year risk of developing coronary heart di
 | 6 | **diabetes** | 0.097 | Diabetes status (0/1) |
 
 ---
-
+deployed app link:https://heartdiseaseprediction-phqsrwfzttfghakvjy3e3q.streamlit.app/
 ## 🚀 Local Setup
 
 ### Prerequisites
